@@ -7,12 +7,15 @@ Discover a modern haste server based on [Elysia](https://elysiajs.com/)
 
 ## Features 
 
-- Fast : Based on the super fast elysia framework, this haste server is very fast too (I hope)
+- Fast : Based on the super fast elysia framework, this haste server is very fast too (I hope).
 
 - Modern : Use modern libraries to run so everything is updated !
 
-- Configurable : Configure the server as you wish (well not for now but soon yes)
+- Configurable : Configure the server as you wish (well not for now but soon yes).
 
+- Copy File : Copy the page of your choice and then edit as you wish.
+
+- Raw File : Get the raw file.
 
 ## Getting Started
 
