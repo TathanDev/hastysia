@@ -1,20 +1,21 @@
 import { mkdir } from "node:fs/promises";
-import generateName from "./utils";
+import generateName from "../utils/utils";
+import { Storage } from "./storage";
 
-export class FileHandler {
+export class FileHandler implements Storage {
     private directory: string;
 
     constructor(directory: string) {
         this.directory = directory;
     }
 
-    public async saveFile(content: string): Promise<string> {
+    public async save(content: string): Promise<string> {
         await this.ensureDirectoryExists();
         let name = generateName();
         while (await this.fileExists(name)) {
             name = generateName();
         }
-        await this.writeFile(name, content);
+        await this.write(name, content);
         return name;
     }
 
@@ -31,11 +32,11 @@ export class FileHandler {
         return await file.exists();
     }
 
-    public async writeFile(name: string, content: string): Promise<void> {
+    public async write(name: string, content: string): Promise<void> {
         await Bun.write(`${this.directory}/${name}`, content);
     }
 
-    public async readFile(name: string): Promise<string | null> {
+    public async read(name: string): Promise<string | null> {
         const file = Bun.file(`${this.directory}/${name}`);
 
         const fileExists = await file.exists();

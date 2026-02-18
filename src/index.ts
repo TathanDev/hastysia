@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import config from '../config'
 import { rateLimit } from 'elysia-rate-limit'
 import { staticPlugin } from '@elysiajs/static'
-import { FileHandler } from "./utils/file-handler";
+import { FileHandler } from "./storage/file-storage";
 import html from "@elysiajs/html";
 import { HtmlRenderer } from "./utils/html-render";
 
@@ -32,7 +32,7 @@ const app = new Elysia()
       status(404, "Don't include dots in id");
       return 'Not found';
     }
-    const fileContent = await fileHandler.readFile(id);
+    const fileContent = await fileHandler.read(id);
     if (!fileContent) {
       status(404, "File not found");
       return 'File not found';
@@ -50,7 +50,7 @@ const app = new Elysia()
       return 'Not found';
     }
 
-    const fileContent = await fileHandler.readFile(id);
+    const fileContent = await fileHandler.read(id);
 
     if (!fileContent) {
       status(404, "File not found");
@@ -71,7 +71,7 @@ const app = new Elysia()
       return 'Invalid content';
     }
 
-    const name = await fileHandler.saveFile(content);
+    const name = await fileHandler.save(content);
     return { key: name };
   })
 
