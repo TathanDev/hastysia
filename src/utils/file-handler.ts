@@ -1,5 +1,5 @@
 import { mkdir } from "node:fs/promises";
-import generateName from "./name";
+import generateName from "./utils";
 
 export class FileHandler {
     private directory: string;
