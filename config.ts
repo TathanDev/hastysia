@@ -1,27 +1,5 @@
-type Config = {
-    name: string
-    host: string
-    port: number
-    rateLimit: {
-        windowMs: number
-        max: number
-    }
-    logging: boolean
-    theme: string
-    storage:
-        | {
-            type: 'file'
-            file: {
-                directory: string
-            }
-        }
-        | {
-            type: 'redis'
-            redis: {
-                connectionString: string
-            }
-        }
-}
+import Config from "./src/types/config"
+
 
 const config: Config = {
     

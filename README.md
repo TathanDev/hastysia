@@ -15,7 +15,9 @@ Discover a modern haste server based on [Elysia](https://elysiajs.com/)
 
 - Copy File : Copy the page of your choice and then edit as you wish.
 
-- Raw File : Get the raw file.
+- Raw File : Get the raw file by just going to `http://website/raw/:id`
+
+- Multiple Data Storage : Store data via file or with redis !
 
 ## Getting Started
 
@@ -44,7 +46,7 @@ Open http://localhost:7777/ with your browser to see the result.
 Here a list of features I want to add to hastysia.
 
 **More File storage**
-Right now, Hastysia haste only support file storage.
+Right now, Hastysia haste only support file storage and redis.
 But I want to add support for database supports
 
 **Auto File Delete**
@@ -52,9 +54,6 @@ Add an option to delete old files
 
 **Docker File**
 I also want to add a docker file to easily deploy the service.
-
-**Logger**
-Some logs may be util
 
 **A Better Name**
 I think this name is good but can maybe change to something more profesionnal... I don't know for now
