@@ -11,12 +11,13 @@ import { log } from "./utils/logger";
 
 
 const dataStorage: DataStorage = config.storage.type === 'redis'
-    ? new RedisStorage(config.storage.redis.connectionString)
-    : new FileHandler(config.storage.file.directory);
+  ? new RedisStorage(config.storage.redis.connectionString)
+  : new FileHandler(config.storage.file.directory);
 
 const htmlRenderer = new HtmlRenderer(config.theme, config.name)
 
 const app = new Elysia()
+  //Plugins
   .use(rateLimit({
     duration: config.rateLimit.windowMs || 10_000,
     max: config.rateLimit.max || 100,
@@ -33,6 +34,8 @@ const app = new Elysia()
       }
     });
   })
+
+  //Homepage and API
   .get('/:id', async ({ params: { id }, status }) => {
     if (id.includes('.')) {
       status(404, "Don't include dots in id");

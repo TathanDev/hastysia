@@ -5,7 +5,7 @@ Discover a modern haste server based on [Elysia](https://elysiajs.com/)
 > [!WARNING]  
 > This project is in early beta! Bugs may occurs
 
-## Features 
+## Features
 
 - Fast : Based on the super fast elysia framework, this haste server is very fast too (I hope).
 
@@ -24,11 +24,13 @@ Discover a modern haste server based on [Elysia](https://elysiajs.com/)
 Install Bun : [Installation](https://bun.com/docs/installation)
 
 Clone the repository
+
 ```bash
 git clone https://github.com/TathanDev/haste-elysia.git
 ```
 
 Install dependencies
+
 ```bash
 bun install
 ```
@@ -36,6 +38,7 @@ bun install
 Configure the server in the `config.ts`
 
 Start the Server
+
 ```bash
 bun run dev
 ```
@@ -43,6 +46,7 @@ bun run dev
 Open http://localhost:7777/ with your browser to see the result.
 
 ## Upcoming features
+
 Here a list of features I want to add to hastysia.
 
 **More File storage**
@@ -58,3 +62,35 @@ I also want to add a docker file to easily deploy the service.
 **A Better Name**
 I think this name is good but can maybe change to something more profesionnal... I don't know for now
 
+## Settings
+
+All the settings can be found in the [Config Type Definiton](https://github.com/TathanDev/hastysia/blob/main/src/types/config.ts).
+
+### Redis Storage
+
+To use redis, you need to give it a connection string like this.
+
+```ts
+storage: {
+    type: 'redis',
+    redis: {
+        connectionString: 'redis://localhost:6379'
+    }
+}
+```
+
+## Documentation
+
+### Post file
+
+To post a file to your haste server, you need to use the `/save` endpoints.
+You need to pass your file content in the body.
+
+Here an exemple for vanilla javascript
+
+```js
+const request = new XMLHttpRequest();
+request.open("POST", yourHasteServerUrl);
+request.setRequestHeader("Content-Type", "application/json");
+request.send(JSON.stringify({ content }));
+```
