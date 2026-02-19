@@ -2,12 +2,18 @@ import { Elysia } from "elysia";
 import config from '../config'
 import { rateLimit } from 'elysia-rate-limit'
 import { staticPlugin } from '@elysiajs/static'
-import { FileHandler } from "./utils/file-handler";
+import { FileHandler } from "./storage/file-storage";
 import html from "@elysiajs/html";
 import { HtmlRenderer } from "./utils/html-render";
+import { RedisStorage } from "./storage/redis-storage";
+import { DataStorage } from "./storage/data-storage";
+import { log } from "./utils/logger";
 
 
-const fileHandler = new FileHandler('data')
+const dataStorage: DataStorage = config.storage.type === 'redis'
+    ? new RedisStorage(config.storage.redis.connectionString)
+    : new FileHandler(config.storage.file.directory);
+
 const htmlRenderer = new HtmlRenderer(config.theme, config.name)
 
 const app = new Elysia()
@@ -32,7 +38,7 @@ const app = new Elysia()
       status(404, "Don't include dots in id");
       return 'Not found';
     }
-    const fileContent = await fileHandler.readFile(id);
+    const fileContent = await dataStorage.read(id);
     if (!fileContent) {
       status(404, "File not found");
       return 'File not found';
@@ -50,7 +56,7 @@ const app = new Elysia()
       return 'Not found';
     }
 
-    const fileContent = await fileHandler.readFile(id);
+    const fileContent = await dataStorage.read(id);
 
     if (!fileContent) {
       status(404, "File not found");
@@ -71,13 +77,13 @@ const app = new Elysia()
       return 'Invalid content';
     }
 
-    const name = await fileHandler.saveFile(content);
+    const name = await dataStorage.save(content);
     return { key: name };
   })
 
   .listen(config.port)
 
 
-console.log(
+log(
   `📚 Hastysia is running at http://${app.server?.hostname}:${app.server?.port}`
 );

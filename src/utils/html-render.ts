@@ -59,6 +59,5 @@ export class HtmlRenderer {
 </body>
 </html>`
 
-
     }
 }

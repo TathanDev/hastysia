@@ -1,14 +1,18 @@
 import { mkdir } from "node:fs/promises";
-import generateName from "./utils";
+import generateName from "../utils/utils";
+import { DataStorage } from "./data-storage";
+import { log } from "../utils/logger";
 
-export class FileHandler {
+export class FileHandler implements DataStorage {
     private directory: string;
 
     constructor(directory: string) {
         this.directory = directory;
+        log("Using File storage with directory:", directory);
+        
     }
 
-    public async saveFile(content: string): Promise<string> {
+    public async save(content: string): Promise<string> {
         await this.ensureDirectoryExists();
         let name = generateName();
         while (await this.fileExists(name)) {
@@ -35,7 +39,7 @@ export class FileHandler {
         await Bun.write(`${this.directory}/${name}`, content);
     }
 
-    public async readFile(name: string): Promise<string | null> {
+    public async read(name: string): Promise<string | null> {
         const file = Bun.file(`${this.directory}/${name}`);
 
         const fileExists = await file.exists();
