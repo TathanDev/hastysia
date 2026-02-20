@@ -16,6 +16,7 @@ const config: Config = {
         file: {
             directory: 'data' // Directory to store files, will be created if it doesn't exist
         },
+        //timeout: 365 * 24 * 60 * 60 * 1000 // Optional timeout for entries in milliseconds (e.g. 1 day = 24 * 60 * 60 * 1000). If set, entries will be automatically deleted after the specified time. Note: For file storage, this will check for expired entries on each save and read operation, which may impact performance if you have a large number of files.
         //redis: {
         //     connectionString: 'redis://localhost:6379' // Redis connection string
         //}

@@ -23,7 +23,7 @@ export class HtmlRenderer {
     }
 
     public renderEditorPage(options: RenderOptions) {
-        return `<!DOCTYPE html>
+        return `
 <html lang="en">
 <head>
     <meta charset="UTF-8">  
@@ -37,7 +37,6 @@ export class HtmlRenderer {
     />
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-    <script type="text/javascript" src="/public/keybind.min.js"></script>
     <script src="/public/script.js" defer></script>
 </head>
 <body>

@@ -8,9 +8,7 @@ export type Config = {
     }
     logging: boolean
     theme: string
-    storage:
-    | RedisConfig
-    | FileConfig
+    storage:StorageConfig 
 
 }
 
@@ -27,5 +25,11 @@ type FileConfig = {
         directory: string
     }
 };
+
+type DeletionConfig = {
+    timeout: number | null
+}
+
+type StorageConfig = RedisConfig & DeletionConfig | FileConfig & DeletionConfig;
 
 export default Config;

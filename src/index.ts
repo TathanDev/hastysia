@@ -8,15 +8,18 @@ import { HtmlRenderer } from "./utils/html-render";
 import { RedisStorage } from "./storage/redis-storage";
 import { DataStorage } from "./storage/data-storage";
 import { log } from "./utils/logger";
+import cron, { Patterns } from "@elysiajs/cron";
 
 
 const dataStorage: DataStorage = config.storage.type === 'redis'
-  ? new RedisStorage(config.storage.redis.connectionString)
-  : new FileHandler(config.storage.file.directory);
+  ? new RedisStorage(config.storage.redis.connectionString, config.storage.timeout)
+  : new FileHandler(config.storage.file.directory, config.storage.timeout);
 
 const htmlRenderer = new HtmlRenderer(config.theme, config.name)
 
+
 const app = new Elysia()
+  //Plugins
   .use(rateLimit({
     duration: config.rateLimit.windowMs || 10_000,
     max: config.rateLimit.max || 100,
@@ -26,14 +29,21 @@ const app = new Elysia()
     indexHTML: true,
   }))
   .use(html())
-  .get('/', () => {
-    return new Response(htmlRenderer.renderEditorPage({}), {
-      headers: {
-        'content-type': 'text/html; charset=utf-8'
-      }
-    });
+  .use(
+		cron({
+			name: 'deleteExpiredEntries',
+			pattern: Patterns.everyDayAt(), // Run every day at midnight
+			run() {
+				dataStorage.checkAndDeleteExpiredEntries()
+			}
+		})
+	)
+  .get('/', ({html}) => {
+    return html(htmlRenderer.renderEditorPage({}))
   })
-  .get('/:id', async ({ params: { id }, status }) => {
+
+  //Homepage and API
+  .get('/:id', async ({ params: { id }, status, html }) => {
     if (id.includes('.')) {
       status(404, "Don't include dots in id");
       return 'Not found';
@@ -44,11 +54,7 @@ const app = new Elysia()
       return 'File not found';
     }
 
-    return new Response(htmlRenderer.renderEditorPage({ content: fileContent, disableInput: true }), {
-      headers: {
-        'content-type': 'text/html; charset=utf-8'
-      }
-    });
+    return html(htmlRenderer.renderEditorPage({ content: fileContent, disableInput: true }));
   })
   .get('/raw/:id', async ({ params: { id }, status }) => {
     if (id.includes('.')) {
@@ -80,9 +86,7 @@ const app = new Elysia()
     const name = await dataStorage.save(content);
     return { key: name };
   })
-
-  .listen(config.port)
-
+  .listen({port: config.port, hostname: config.host});
 
 log(
   `📚 Hastysia is running at http://${app.server?.hostname}:${app.server?.port}`
