@@ -27,16 +27,12 @@ const app = new Elysia()
     indexHTML: true,
   }))
   .use(html())
-  .get('/', () => {
-    return new Response(htmlRenderer.renderEditorPage({}), {
-      headers: {
-        'content-type': 'text/html; charset=utf-8'
-      }
-    });
+  .get('/', ({html}) => {
+    return html(htmlRenderer.renderEditorPage({}))
   })
 
   //Homepage and API
-  .get('/:id', async ({ params: { id }, status }) => {
+  .get('/:id', async ({ params: { id }, status, html }) => {
     if (id.includes('.')) {
       status(404, "Don't include dots in id");
       return 'Not found';
@@ -47,11 +43,7 @@ const app = new Elysia()
       return 'File not found';
     }
 
-    return new Response(htmlRenderer.renderEditorPage({ content: fileContent, disableInput: true }), {
-      headers: {
-        'content-type': 'text/html; charset=utf-8'
-      }
-    });
+    return html(htmlRenderer.renderEditorPage({ content: fileContent, disableInput: true }));
   })
   .get('/raw/:id', async ({ params: { id }, status }) => {
     if (id.includes('.')) {

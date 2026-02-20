@@ -13,13 +13,13 @@ const config: Config = {
     logging: true, // Enable or disable logging
     theme: 'atom-one-dark', // Check available themes at https://highlightjs.org/examples
     storage: {
-        type: 'redis', // 'file' or 'redis'
-        //file: {
-        //    directory: 'data' // Directory to store files, will be created if it doesn't exist
-        //},
-        redis: {
-             connectionString: 'redis://localhost:6379' // Redis connection string
-        }
+        type: 'file', // 'file' or 'redis'
+        file: {
+            directory: 'data' // Directory to store files, will be created if it doesn't exist
+        },
+        //redis: {
+        //     connectionString: 'redis://localhost:6379' // Redis connection string
+        //}
     }
 }
 

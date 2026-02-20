@@ -25,7 +25,7 @@ export class HtmlRenderer {
 
 
     public renderEditorPage(options: RenderOptions) {
-        return `<!DOCTYPE html>
+        return `
 <html lang="en">
 <head>
     <meta charset="UTF-8">  
