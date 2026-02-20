@@ -70,22 +70,17 @@ newBtn.addEventListener("click", () => {
 
 // Check for cookie on page load and populate input if it exists
 document.addEventListener("DOMContentLoaded", () => {
-  const contentFromCookie = getCookie("content");
-  if (contentFromCookie) {
-    input.value = navigator.clipboard.readText().then((text) => {
-      input.value = text;
-      renderPreview(text);
-    });
-    clearCookie(); // Clear the cookie after use
+  const contentFromSession = window.sessionStorage.getItem("content");
+  if (contentFromSession) {
+    input.value = contentFromSession;
+    renderPreview(contentFromSession);
+    window.sessionStorage.removeItem("content");
   }
   renderPreview(input.value);
 });
 
 const duplicatePage = () => {
-  input.select();
-  input.setSelectionRange(0, 99999);
-  navigator.clipboard.writeText(input.value);
-  document.cookie = `content=true; path=/; max-age=60`;
+  window.sessionStorage.setItem("content", input.value);
   window.location.href = window.location.origin;
 };
 
