@@ -11,8 +11,8 @@ import { log } from "./utils/logger";
 
 
 const dataStorage: DataStorage = config.storage.type === 'redis'
-    ? new RedisStorage(config.storage.redis.connectionString)
-    : new FileHandler(config.storage.file.directory);
+  ? new RedisStorage(config.storage.redis.connectionString)
+  : new FileHandler(config.storage.file.directory);
 
 const htmlRenderer = new HtmlRenderer(config.theme, config.name)
 
