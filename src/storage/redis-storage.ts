@@ -1,5 +1,5 @@
-import { redis, RedisClient } from "bun";
-import generateName from "../utils/utils";
+import { RedisClient } from "bun";
+import { generateName } from "../utils/utils";
 import { DataStorage } from "./data-storage";
 import { log } from "../utils/logger";
 

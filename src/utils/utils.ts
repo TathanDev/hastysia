@@ -8,4 +8,4 @@ function generateName(length: number = 7): string {
     return name;
 }
 
-export default generateName;
+export {generateName};

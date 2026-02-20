@@ -1,5 +1,5 @@
 import { mkdir } from "node:fs/promises";
-import generateName from "../utils/utils";
+import { generateName } from "../utils/utils";
 import { DataStorage } from "./data-storage";
 import { log } from "../utils/logger";
 import { DeletionManager } from "../utils/file-deletion";
