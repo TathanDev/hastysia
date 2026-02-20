@@ -22,8 +22,6 @@ export class HtmlRenderer {
             .replace(/'/g, '&#39;');
     }
 
-
-
     public renderEditorPage(options: RenderOptions) {
         return `<!DOCTYPE html>
 <html lang="en">

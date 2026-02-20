@@ -1,6 +1,5 @@
 import Config from "./src/types/config"
 
-
 const config: Config = {
     
     name: "Elysia Haste", // Site name, you can change it to whatever you want
