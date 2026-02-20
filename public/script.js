@@ -45,30 +45,53 @@ function saveFile() {
     }
   };
 }
+document.addEventListener("keydown", (event) => {
+  if (event.ctrlKey || event.metaKey) {
+    if (event.key === "s" || event.key === "S") {
+      event.preventDefault();
+      saveFile();
+    } else if (event.key === "n" || event.key === "N") {
+      event.preventDefault();
+      clearCookie();
+      window.location.href = window.location.origin + "";
+    } else if (event.key === "d" || event.key === "D") {
+      event.preventDefault();
+      duplicatePage();
+    }
+  }
+});
 
+copyBtn.addEventListener("click", () => duplicatePage());
 saveBtn.addEventListener("click", saveFile);
 newBtn.addEventListener("click", () => {
   clearCookie();
   window.location.href = window.location.origin + "";
 });
 
-copyBtn.addEventListener("click", () => {
-  document.cookie = `content=${encodeURIComponent(input.value)}; path=/; max-age=60`;
-  window.location.href = window.location.origin;
-});
-
+// Check for cookie on page load and populate input if it exists
 document.addEventListener("DOMContentLoaded", () => {
   const contentFromCookie = getCookie("content");
-  console.log("Content from cookie:", contentFromCookie);
   if (contentFromCookie) {
-    input.value = decodeURIComponent(contentFromCookie);
-    renderPreview(decodeURIComponent(contentFromCookie));
+    input.value = navigator.clipboard.readText().then((text) => {
+      input.value = text;
+      renderPreview(text);
+    });
     clearCookie(); // Clear the cookie after use
   }
+  renderPreview(input.value);
 });
+
+const duplicatePage = () => {
+  input.select();
+  input.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(input.value);
+  document.cookie = `content=true; path=/; max-age=60`;
+  window.location.href = window.location.origin;
+};
 
 function clearCookie() {
   document.cookie = "content=; path=/; max-age=0";
+  navigator.clipboard.writeText(""); // Clear the clipboard
 }
 
 function getCookie(cname) {

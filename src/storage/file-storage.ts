@@ -2,14 +2,17 @@ import { mkdir } from "node:fs/promises";
 import generateName from "../utils/utils";
 import { DataStorage } from "./data-storage";
 import { log } from "../utils/logger";
+import { DeletionManager } from "../utils/file-deletion";
 
-export class FileHandler implements DataStorage {
+export class FileHandler extends DataStorage {
     private directory: string;
+    private deletionManager: DeletionManager | null;
 
-    constructor(directory: string) {
+    constructor(directory: string, timeout: number | null) {
+        super(timeout);
         this.directory = directory;
         log("Using File storage with directory:", directory);
-        
+        this.deletionManager = timeout ? new DeletionManager(directory, timeout) : null;
     }
 
     public async save(content: string): Promise<string> {
@@ -19,6 +22,10 @@ export class FileHandler implements DataStorage {
             name = generateName();
         }
         await this.writeFile(name, content);
+        
+        if(this.deletionManager) this.deletionManager.addToDeletion(name);
+
+        log("Saved content with name:", name);
         return name;
     }
 
@@ -48,4 +55,11 @@ export class FileHandler implements DataStorage {
         }
         return await file.text();
     }
+
+    public async checkAndDeleteExpiredEntries(): Promise<void> {
+        if (this.deletionManager) {
+            await this.deletionManager.removeOldEntries();
+        }
+    }
+
 }

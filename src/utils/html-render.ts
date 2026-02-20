@@ -22,8 +22,6 @@ export class HtmlRenderer {
             .replace(/'/g, '&#39;');
     }
 
-
-
     public renderEditorPage(options: RenderOptions) {
         return `
 <html lang="en">
@@ -39,7 +37,6 @@ export class HtmlRenderer {
     />
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-    <script type="text/javascript" src="/public/keybind.min.js"></script>
     <script src="/public/script.js" defer></script>
 </head>
 <body>

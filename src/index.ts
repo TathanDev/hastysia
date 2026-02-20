@@ -8,13 +8,15 @@ import { HtmlRenderer } from "./utils/html-render";
 import { RedisStorage } from "./storage/redis-storage";
 import { DataStorage } from "./storage/data-storage";
 import { log } from "./utils/logger";
+import cron, { Patterns } from "@elysiajs/cron";
 
 
 const dataStorage: DataStorage = config.storage.type === 'redis'
-  ? new RedisStorage(config.storage.redis.connectionString)
-  : new FileHandler(config.storage.file.directory);
+  ? new RedisStorage(config.storage.redis.connectionString, config.storage.timeout)
+  : new FileHandler(config.storage.file.directory, config.storage.timeout);
 
 const htmlRenderer = new HtmlRenderer(config.theme, config.name)
+
 
 const app = new Elysia()
   //Plugins
@@ -27,6 +29,15 @@ const app = new Elysia()
     indexHTML: true,
   }))
   .use(html())
+  .use(
+		cron({
+			name: 'deleteExpiredEntries',
+			pattern: Patterns.everyDayAt(), // Run every day at midnight
+			run() {
+				dataStorage.checkAndDeleteExpiredEntries()
+			}
+		})
+	)
   .get('/', ({html}) => {
     return html(htmlRenderer.renderEditorPage({}))
   })
@@ -75,9 +86,7 @@ const app = new Elysia()
     const name = await dataStorage.save(content);
     return { key: name };
   })
-
-  .listen(config.port)
-
+  .listen({port: config.port, hostname: config.host});
 
 log(
   `📚 Hastysia is running at http://${app.server?.hostname}:${app.server?.port}`
