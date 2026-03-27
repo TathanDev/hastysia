@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import config from '../config'
+import config from './config'
 import { rateLimit } from 'elysia-rate-limit'
 import { staticPlugin } from '@elysiajs/static'
 import { FileHandler } from "./storage/file-storage";

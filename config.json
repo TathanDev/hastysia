@@ -1,0 +1,17 @@
+{
+  "name": "Elysia Haste",
+  "host": "0.0.0.0",
+  "port": 7777,
+  "rateLimit": {
+    "windowMs": 10000,
+    "max": 50
+  },
+  "logging": true,
+  "theme": "atom-one-dark",
+  "storage": {
+    "type": "file",
+    "file": {
+      "directory": "data"
+    }
+  }
+}

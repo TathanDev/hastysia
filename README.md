@@ -37,7 +37,9 @@ Install dependencies
 bun install
 ```
 
-Configure the server in the `config.ts`
+Configure the server in the `config.json`
+
+Every field in the config.json can be override via a .env
 
 Start the Server
 
