@@ -41,6 +41,12 @@ Configure the server in the `config.json`
 
 Every field in the config.json can be override via a .env
 
+Storage-specific environment variables:
+
+- `STORAGE_TYPE` (`file` or `redis`)
+- `REDIS_CONNECTION_STRING` (used when `STORAGE_TYPE=redis`)
+- `DATA_DIRECTORY` (used when `STORAGE_TYPE=file`)
+
 Start the Server
 
 ```bash

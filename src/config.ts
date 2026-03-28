@@ -1,6 +1,27 @@
 import baseConfig from "../config.json"
 import Config from "./types/config"
 
+const envStorageType = process.env.STORAGE_TYPE?.toLowerCase()
+const storageType = envStorageType === "redis" || envStorageType === "file"
+    ? envStorageType
+    : baseConfig.storage.type
+
+const storage = storageType === "redis"
+    ? {
+        ...baseConfig.storage,
+        type: "redis" as const,
+        redis: {
+            connectionString: process.env.REDIS_CONNECTION_STRING ?? baseConfig.storage.redis.connectionString
+        }
+    }
+    : {
+        ...baseConfig.storage,
+        type: "file" as const,
+        file: {
+            directory: process.env.DATA_DIRECTORY ?? baseConfig.storage.file.directory
+        }
+    }
+
 const config: Config = {
     name: process.env.APP_NAME ?? baseConfig.name,
 
@@ -26,9 +47,7 @@ const config: Config = {
 
     theme: process.env.THEME ?? baseConfig.theme,
 
-    storage: {
-        ...baseConfig.storage
-    }
+    storage
 }
 
 export default config

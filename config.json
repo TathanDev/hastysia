@@ -11,7 +11,8 @@
   "storage": {
     "type": "file",
     "file": {
-      "directory": "data"
+      "directory": "./data"
     }
   }
 }
+
