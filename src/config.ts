@@ -12,14 +12,18 @@ const storage = storageType === "redis"
         type: "redis" as const,
         redis: {
             connectionString: process.env.REDIS_CONNECTION_STRING ?? baseConfig.storage.redis.connectionString
-        }
+        },
+        timeout: process.env.STORAGE_TIMEOUT ? Number(process.env.STORAGE_TIMEOUT)
+            : baseConfig.storage.timeout
     }
     : {
         ...baseConfig.storage,
         type: "file" as const,
         file: {
             directory: process.env.DATA_DIRECTORY ?? baseConfig.storage.file.directory
-        }
+        },
+        timeout: process.env.STORAGE_TIMEOUT ? Number(process.env.STORAGE_TIMEOUT)
+            : baseConfig.storage.timeout
     }
 
 const config: Config = {

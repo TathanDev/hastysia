@@ -8,7 +8,7 @@ export type Config = {
     }
     logging: boolean
     theme: string
-    storage:StorageConfig 
+    storage: StorageConfig 
 
 }
 

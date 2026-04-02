@@ -9,6 +9,7 @@
   "logging": true,
   "theme": "atom-one-dark",
   "storage": {
+    "timeout": 999999999,
     "type": "file",
     "file": {
       "directory": "./data"
