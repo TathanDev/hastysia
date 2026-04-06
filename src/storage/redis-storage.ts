@@ -7,6 +7,7 @@ import { log } from "../utils/logger";
 export class RedisStorage extends DataStorage {
 
     private redisClient: RedisClient;
+    private static readonly MAX_EXPIRE_SECONDS = 2147483647;
 
     constructor(connectionString: string, timeout: number | null) {
         super(timeout);
@@ -28,8 +29,9 @@ export class RedisStorage extends DataStorage {
         }
         await this.redisClient.set(name, content);
 
-        if(this.defaultTimeout) {
-            await this.redisClient.expire(name, Math.floor(this.defaultTimeout / 1000));
+        const expireSeconds = this.getExpireSeconds();
+        if (expireSeconds !== null) {
+            await this.redisClient.expire(name, expireSeconds);
         }
 
         log("Saved content with name:", name);
@@ -45,6 +47,19 @@ export class RedisStorage extends DataStorage {
         }
 
         return value;
+    }
+
+    private getExpireSeconds(): number | null {
+        if (!this.defaultTimeout) {
+            return null;
+        }
+
+        const seconds = Math.floor(this.defaultTimeout / 1000);
+        if (seconds <= 0) {
+            return null;
+        }
+
+        return Math.min(seconds, RedisStorage.MAX_EXPIRE_SECONDS);
     }
 
     public checkAndDeleteExpiredEntries(): Promise<void> {

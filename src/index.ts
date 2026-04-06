@@ -85,14 +85,9 @@ const app = new Elysia()
       return 'Invalid content';
     }
 
-    try {
-      const name = await dataStorage.save(content);
-      return { key: name };
-    } catch (error) {
-      log('Failed to save content', error);
-      set.status = 500;
-      return 'Failed to save content';
-    }
+    const name = await dataStorage.save(content);
+    return { key: name };
+
   })
   .listen({port: config.port, hostname: config.host});
 
