@@ -1,3 +1,4 @@
+import { mkdir } from "node:fs/promises";
 import { log } from "./logger";
 
 /**
@@ -8,14 +9,16 @@ export class DeletionManager {
 
     private defaultTimeout: number
     private dataFolder: string
+    private ready: Promise<void>
 
     constructor(dataFolder: string, timeout: number) {
         this.defaultTimeout = timeout
         this.dataFolder = dataFolder
-        this.checkStorageFile();
+        this.ready = this.checkStorageFile();
     }
 
     private async checkStorageFile(): Promise<void> {
+        await mkdir(this.dataFolder, { recursive: true });
         const storageFile = Bun.file(`${this.dataFolder}/storage.json`)
         if (!await storageFile.exists()) {
             await storageFile.write(JSON.stringify({}))
@@ -23,16 +26,18 @@ export class DeletionManager {
     }
 
     public async addToDeletion(id: string) {
+        await this.ready;
         const storageFile = Bun.file(`${this.dataFolder}/storage.json`)
-        const data = JSON.parse(await storageFile.text())
+        const data = await this.readStorageData(storageFile)
         
         data[id] = Date.now() + this.defaultTimeout
         await storageFile.write(JSON.stringify(data))
     }
 
     public async removeOldEntries() {
+        await this.ready;
         const storageFile = Bun.file(`${this.dataFolder}/storage.json`)
-        const data = JSON.parse(await storageFile.text())
+        const data = await this.readStorageData(storageFile)
         const now = Date.now()
         let changed = false
         for (const id in data) {
@@ -47,6 +52,24 @@ export class DeletionManager {
         }
         if (changed) {
             await storageFile.write(JSON.stringify(data))
+        }
+    }
+
+    private async readStorageData(storageFile: Bun.BunFile): Promise<Record<string, number>> {
+        if (!await storageFile.exists()) {
+            return {}
+        }
+
+        const raw = await storageFile.text()
+        if (!raw.trim()) {
+            return {}
+        }
+
+        try {
+            return JSON.parse(raw) as Record<string, number>
+        } catch {
+            log("Invalid storage.json contents, resetting deletion metadata")
+            return {}
         }
     }
 }
