@@ -9,6 +9,7 @@ import { RedisStorage } from "./storage/redis-storage";
 import { DataStorage } from "./storage/data-storage";
 import { log } from "./utils/logger";
 import cron, { Patterns } from "@elysiajs/cron";
+import { cors } from '@elysiajs/cors'
 
 
 const dataStorage: DataStorage = config.storage.type === 'redis'
@@ -28,6 +29,7 @@ const app = new Elysia()
     prefix: '/public',
     indexHTML: true,
   }))
+  .use(cors())
   .use(html())
   .use(
 		cron({
