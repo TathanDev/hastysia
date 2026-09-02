@@ -36,6 +36,7 @@ export class HtmlRenderer {
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
     
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
     <script src="/public/script.js" defer></script>
 </head>
@@ -46,7 +47,9 @@ export class HtmlRenderer {
             <button id="saveBtn" data-tooltip="Save the text"><i class="bi bi-floppy2"></i></button>
             <button id="newBtn" data-tooltip="Create a new file"><i class="bi bi-file-earmark"></i></button>
             <button id="copyBtn" data-tooltip="Copy the text to clipboard"><i class="bi bi-clipboard"></i></button>
+            <button id="qrcodeBtn" data-tooltip="Generate QRCode"><i class="bi bi-qr-code"></i></button>
         </div>
+        <div id="qrcode"></div>
 
     </div>
     <main class="editor">   

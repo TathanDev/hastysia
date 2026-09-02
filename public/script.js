@@ -4,6 +4,7 @@ const previewContainer = document.querySelector("pre");
 const saveBtn = document.getElementById("saveBtn");
 const newBtn = document.getElementById("newBtn");
 const copyBtn = document.getElementById("copyBtn");
+const qrcodeBtn = document.getElementById("qrcodeBtn")
 
 function renderPreview(value) {
   const safeValue = value ?? "";
@@ -61,6 +62,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+qrcodeBtn.addEventListener("click", () => generateQRCode())
 copyBtn.addEventListener("click", () => duplicatePage());
 saveBtn.addEventListener("click", saveFile);
 newBtn.addEventListener("click", () => {
@@ -83,6 +85,24 @@ const duplicatePage = () => {
   window.sessionStorage.setItem("content", input.value);
   window.location.href = window.location.origin;
 };
+
+const generateQRCode = () => {
+  const qrcode = document.getElementById("qrcode")
+
+  if(qrcode.style.display == "none") {
+    qrcode.innerHTML = ""
+      new QRCode(qrcode, {
+        text: window.location.href,
+        width: 200,
+        height: 200
+    });
+    qrcode.style.display = "block"
+  } else {
+    qrcode.style.display = "none"
+  }
+   
+  
+}
 
 function clearCookie() {
   document.cookie = "content=; path=/; max-age=0";
